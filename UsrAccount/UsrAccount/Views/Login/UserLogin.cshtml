@@ -1,0 +1,135 @@
+﻿@model UserIdentity
+
+@{ 
+    ViewData["Title"] = "로그인";
+}
+
+<h2>사용자 확인 &nbsp;&nbsp;<small><i class="glyphicon glyphicon glyphicon-hand-right">&nbsp;</i>아이디와 암호를 입력하시오</small></h2>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <section>
+
+            <form asp-controller="Login" asp-action="UserLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="UserId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="UserId" class="form-control" />
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input type="password" asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-9">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="cbSaveId" />아이디 저장
+                            </label>
+                        </div>
+                        
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" id="btnLogin" class="btn btn-primary">로그인</button>
+                        <a href="javascript:history.back()" class="btn btn-default">되돌아가기</a>
+                    </div>
+                </div>
+                @*<p>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">회원가입</a>
+                   
+                </p>*@
+                
+            </form>
+        </section>
+    </div>
+    <div class="col-md-4">
+        @ViewData["ErrMsg"]
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+
+    <script>
+
+        $(function () {
+
+            var cookie_user_id = getLogin();
+
+            if (cookie_user_id != "") {
+                $("#UserId").val(cookie_user_id);
+                $("#cbSaveId").attr("checked", true)
+
+            }
+
+
+            $("#btnLogin").on("click", function () {
+
+                if ($("#cbSaveId").is(":checked")) {
+                    saveLogin($("#UserId").val());
+                } else {
+                    saveLogin("");
+
+                }
+
+            });
+
+        });
+
+
+        function saveLogin(id){
+            if (id != null) {
+                setSave("UserId", id, 7);
+    
+            }
+            else {
+                setSave("UserId", id, -1);
+
+            }
+        
+
+        }
+
+
+        function setSave(name, value, expiredays) {
+            var today = new Date();
+            today.setDate(today.getDate() + expiredays);
+
+            document.cookie = name + "=" + escape(value) + ";path=/;expires=" + today.toGMTString() + ";";
+            //alert(name + "=" + escape(value) + ";path=/;expires=" + today.toGMTString() + ";");
+
+        }
+
+
+        function getLogin() {
+
+            var cook = document.cookie + ";";
+            var idx = cook.indexOf("UserId", 0);
+            var val = "";
+
+
+            if (idx != -1) {
+                cook = cook.substring(idx, cook.length);
+                begin = cook.indexOf("=", 0) + 1;
+                end = cook.indexOf(";", begin);
+                val = unescape(cook.substring(begin, end));
+
+            }
+            
+            return val;
+
+        }
+    </script>
+}

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Credit";
+}
+
+<h2>Credit</h2>
+
+<dl>
+
+    @foreach (var item in User.Claims)
+    {
+        <dt>
+            @item.Type
+        </dt>
+        <dd>
+            @item.Value
+        </dd>
+    }
+
+</dl>
+
+@User.Identity.Name <br />
+@User.IsInRole("Admin") <br />
+@User.FindFirst("UserGroup").Value
+

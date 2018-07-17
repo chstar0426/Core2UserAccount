@@ -1,0 +1,25 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    <form asp-controller="Login" asp-action="UserLogout" method="post" id="logoutForm" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+
+                @*<a asp-controller="UserIdentites" asp-action="Edit" asp-route-id="@User.FindFirst("UserId")">안녕하세요 [ @User.FindFirst("NicName").Value ]님! @User.Identity.Name</a>*@
+                <a asp-controller="UserIdentities" asp-action="Edit" asp-route-id="@User.Identity.Name">
+                    안녕하세요  @User.FindFirst("NicName").Value 님! / [@User.FindFirst("UserGroup").Value 그룹]
+                </a>
+            </li>
+            <li>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">로그아웃</button>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @*<li><a asp-area="" asp-controller="UserAccount" asp-action="Register">회원가입</a></li>*@
+        <li><a asp-area="" asp-controller="Login" asp-action="UserLogin">로그인</a></li>
+    </ul>
+}
+          
